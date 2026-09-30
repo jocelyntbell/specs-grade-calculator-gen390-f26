@@ -1,0 +1,406 @@
+<script>
+
+const gradeRules = [
+
+{
+grade:"A",
+min:93,
+max:112,
+csp:["Excellent"],
+presentation:["Satisfactory"],
+report:["Excellent"],
+review:["Satisfactory"]
+},
+
+{
+grade:"A-",
+min:83,
+max:92,
+csp:["Excellent","Proficient"],
+presentation:["Satisfactory"],
+report:["Excellent","Proficient"],
+review:["Satisfactory"]
+},
+
+{
+grade:"B+",
+min:80,
+max:82,
+csp:["Excellent","Proficient"],
+presentation:["Satisfactory"],
+report:["Excellent","Proficient"],
+review:["Satisfactory"]
+},
+
+{
+grade:"B",
+min:77,
+max:79,
+csp:["Proficient"],
+presentation:["Satisfactory"],
+report:["Proficient"],
+review:["Satisfactory"]
+},
+
+{
+grade:"B-",
+min:75,
+max:76,
+csp:["Proficient","Developing"],
+presentation:["Satisfactory"],
+report:["Proficient","Developing"],
+review:["Satisfactory"]
+},
+
+{
+grade:"C+",
+min:70,
+max:74,
+csp:["Proficient","Developing"],
+presentation:["Unsatisfactory"],
+report:["Proficient","Developing"],
+review:["Unsatisfactory"]
+},
+
+{
+grade:"C",
+min:65,
+max:69,
+csp:["Developing"],
+presentation:["Unsatisfactory"],
+report:["Developing"],
+review:["Unsatisfactory"]
+},
+
+{
+grade:"C-",
+min:61,
+max:64,
+csp:["Developing","Needs Improvement"],
+presentation:["Unsatisfactory"],
+report:["Developing"],
+review:["Unsatisfactory"]
+},
+
+{
+grade:"D+",
+min:51,
+max:60,
+csp:["Developing","Needs Improvement"],
+presentation:["Unsatisfactory"],
+report:["Developing","Needs Improvement"],
+review:["Unsatisfactory"]
+},
+
+{
+grade:"D",
+min:46,
+max:50,
+csp:["Needs Improvement"],
+presentation:["Unsatisfactory"],
+report:["Needs Improvement"],
+review:["Unsatisfactory"]
+}
+
+];
+
+function update(){
+
+const currentPoints =
+Number(document.getElementById("points").value);
+
+const exitTicketsGraded =
+Number(document.getElementById("exitTickets").value);
+
+const reflectionsGraded =
+Number(document.getElementById("reflections").value);
+
+const checkInsGraded =
+Number(document.getElementById("checkIns").value);
+
+const csp =
+document.getElementById("csp").value;
+
+const presentation =
+document.getElementById("presentation").value;
+
+const report =
+document.getElementById("report").value;
+
+const review =
+document.getElementById("review").value;
+
+const remainingExitTicketPoints =
+(21 - exitTicketsGraded) * 4;
+
+const remainingReflectionPoints =
+(3 - reflectionsGraded) * 4;
+
+const remainingCheckInPoints =
+(4 - checkInsGraded) * 4;
+
+const remainingPoints =
+remainingExitTicketPoints +
+remainingReflectionPoints +
+remainingCheckInPoints;
+
+const maximumPossiblePoints =
+currentPoints + remainingPoints;
+
+const futureCSP =
+csp === "Not Graded Yet"
+? "Excellent"
+: csp;
+
+const futurePresentation =
+presentation === "Not Graded Yet"
+? "Satisfactory"
+: presentation;
+
+const futureReport =
+report === "Not Graded Yet"
+? "Excellent"
+: report;
+
+const futureReview =
+review === "Not Graded Yet"
+? "Satisfactory"
+: review;
+
+let highestGrade = "F";
+
+for(const rule of gradeRules){
+
+if(
+maximumPossiblePoints >= rule.min &&
+rule.csp.includes(futureCSP) &&
+rule.presentation.includes(futurePresentation) &&
+rule.report.includes(futureReport) &&
+rule.review.includes(futureReview)
+){
+highestGrade = rule.grade;
+break;
+}
+
+}
+
+const targetRule =
+gradeRules.find(
+g => g.grade === highestGrade
+);
+
+const pointsNeeded =
+targetRule
+? Math.max(
+0,
+targetRule.min - currentPoints
+)
+: 0;
+
+document.getElementById(
+"highestPossible"
+).innerHTML = `
+
+<h3>
+Highest Grade Still Possible:
+${highestGrade}
+</h3>
+
+<p>
+Current Points:
+<b>${currentPoints}</b>
+</p>
+
+<p>
+Highest Possible Final Points:
+<b>${maximumPossiblePoints}</b>
+</p>
+
+<p>
+Minimum Additional Points Needed:
+<b>${pointsNeeded}</b>
+</p>
+
+<h3>Remaining Opportunities</h3>
+
+<ul>
+
+<li>
+Exit Tickets Remaining:
+<b>${21-exitTicketsGraded}</b>
+(${remainingExitTicketPoints} possible points)
+</li>
+
+<li>
+Reflections Remaining:
+<b>${3-reflectionsGraded}</b>
+(${remainingReflectionPoints} possible points)
+</li>
+
+<li>
+Check-In Reports Remaining:
+<b>${4-checkInsGraded}</b>
+(${remainingCheckInPoints} possible points)
+</li>
+
+</ul>
+
+<p>
+Total Remaining Possible Points:
+<b>${remainingPoints}</b>
+</p>
+
+<p>
+<b>
+You need
+${pointsNeeded}
+of the remaining
+${remainingPoints}
+available points.
+</b>
+</p>
+
+`;
+
+let ladderHTML = `
+
+<p>
+Current Points:
+<b>${currentPoints}</b>
+</p>
+
+<p>
+Highest Possible Final Points:
+<b>${maximumPossiblePoints}</b>
+</p>
+
+<hr>
+
+`;
+
+for(const rule of gradeRules){
+
+let status = "";
+
+if(
+currentPoints >= rule.min &&
+currentPoints <= rule.max
+){
+
+status =
+'<span class="met">Current Point Range</span>';
+
+}
+else if(
+maximumPossiblePoints >= rule.min
+){
+
+status =
+'<span class="possible">Still Possible</span>';
+
+}
+else{
+
+status =
+'<span class="notpossible">Not Possible</span>';
+
+}
+
+ladderHTML += `
+
+<div class="ladder-row">
+
+<b>${rule.grade}</b>
+
+(${rule.min}-${rule.max})
+
+<br>
+
+${status}
+
+</div>
+
+`;
+
+}
+
+document.getElementById(
+"gradeLadder"
+).innerHTML = ladderHTML;
+
+let limits = [];
+
+if(
+highestGrade === "A"
+){
+
+if(futureCSP !== "Excellent"){
+limits.push(
+"A requires an Excellent Civic Self-Portrait."
+);
+}
+
+if(futurePresentation !== "Satisfactory"){
+limits.push(
+"A requires a Satisfactory Group Presentation."
+);
+}
+
+if(futureReport !== "Excellent"){
+limits.push(
+"A requires an Excellent Group Report."
+);
+}
+
+if(futureReview !== "Satisfactory"){
+limits.push(
+"A requires a Satisfactory Group Member Review."
+);
+}
+
+}
+
+if(
+["A-","B+","B","B-"].includes(highestGrade)
+){
+
+if(futurePresentation !== "Satisfactory"){
+limits.push(
+"B- or higher requires a Satisfactory Group Presentation."
+);
+}
+
+if(futureReview !== "Satisfactory"){
+limits.push(
+"B- or higher requires a Satisfactory Group Member Review."
+);
+}
+
+}
+
+document.getElementById(
+"limitingFactors"
+).innerHTML =
+
+limits.length === 0
+
+? `<p class="success">
+No limiting factors currently prevent your highest possible grade.
+</p>`
+
+: limits.map(
+x => `<p class="warning">${x}</p>`
+).join("");
+
+}
+
+document
+.querySelectorAll("input, select")
+.forEach(
+element =>
+element.addEventListener("input", update)
+);
+
+update();
+
+</script>

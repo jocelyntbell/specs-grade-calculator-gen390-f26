@@ -211,12 +211,31 @@ Official course grades are determined by the instructor in accordance with the c
 </div>
 
 <div class="card">
-<h2>Course Engagement Points Grade Ladder</h2>
-<div id="gradeLadder"></div>
+
+<h2>Grade Bundle Visualization</h2>
+
+<div class="legend">
+
+<div class="legend-item">
+<span class="legend-box highest"></span>
+Highest Grade Still Possible
 </div>
 
-<img width="1280" height="589" alt="GEN390 F26 Assignment Bundle" src="https://github.com/user-attachments/assets/c07f1b13-6921-4f18-9ab7-077adfadb1e3"/>    
+<div class="legend-item">
+<span class="legend-box attainable"></span>
+Lower Grade Still Attainable
+</div>
 
+<div class="legend-item">
+<span class="legend-box impossible"></span>
+No Longer Attainable (strikethrough)
+</div>
+
+</div>
+
+<div id="bundleTable"></div>
+
+</div>
 </div>
 <script>
 
@@ -482,71 +501,157 @@ available points.
 
 `;
 
-let ladderHTML = `
+const gradesInOrder = [
+"A",
+"A-",
+"B+",
+"B",
+"B-",
+"C+",
+"C",
+"C-",
+"D+",
+"D",
+"F"
+];
 
-<p>
-Current Points:
-<b>${currentPoints}</b>
-</p>
+const highestIndex =
+gradesInOrder.indexOf(highestGrade);
 
-<p>
-Highest Possible Final Points:
-<b>${maximumPossiblePoints}</b>
-</p>
+let tableHTML = `
 
-<hr>
+<table class="bundle-table">
+
+<tr>
+<th>Grade</th>
+<th>Course Engagement Points</th>
+<th>Civic Self-Portrait</th>
+<th>Group Presentation</th>
+<th>Group Report</th>
+<th>Group Member Review</th>
+</tr>
 
 `;
 
-for(const rule of gradeRules){
+const bundleRows = [
 
-let status = "";
+["A",
+"93-112",
+"Excellent",
+"Satisfactory",
+"Excellent",
+"Satisfactory"],
 
-if(
-currentPoints >= rule.min &&
-currentPoints <= rule.max
-){
+["A-",
+"83-92",
+"Excellent / Proficient",
+"Satisfactory",
+"Excellent / Proficient",
+"Satisfactory"],
 
-status =
-'<span class="met">Current Point Range</span>';
+["B+",
+"80-82",
+"Excellent / Proficient",
+"Satisfactory",
+"Excellent / Proficient",
+"Satisfactory"],
+
+["B",
+"77-79",
+"Proficient",
+"Satisfactory",
+"Proficient",
+"Satisfactory"],
+
+["B-",
+"75-76",
+"Proficient / Developing",
+"Satisfactory",
+"Proficient / Developing",
+"Satisfactory"],
+
+["C+",
+"70-74",
+"Proficient / Developing",
+"Unsatisfactory",
+"Proficient / Developing",
+"Unsatisfactory"],
+
+["C",
+"65-69",
+"Developing",
+"Unsatisfactory",
+"Developing",
+"Unsatisfactory"],
+
+["C-",
+"61-64",
+"Developing / Needs Improvement",
+"Unsatisfactory",
+"Developing",
+"Unsatisfactory"],
+
+["D+",
+"51-60",
+"Developing / Needs Improvement",
+"Unsatisfactory",
+"Developing / Needs Improvement",
+"Unsatisfactory"],
+
+["D",
+"46-50",
+"Needs Improvement",
+"Unsatisfactory",
+"Needs Improvement",
+"Unsatisfactory"],
+
+["F",
+"<46",
+"Failed",
+"Failed",
+"Failed",
+"Failed"]
+
+];
+
+bundleRows.forEach((row,index)=>{
+
+let rowClass="";
+
+if(index===highestIndex){
+
+rowClass="highest-row";
 
 }
-else if(
-maximumPossiblePoints >= rule.min
-){
+else if(index>highestIndex){
 
-status =
-'<span class="possible">Still Possible</span>';
+rowClass="attainable-row";
 
 }
 else{
 
-status =
-'<span class="notpossible">Not Possible</span>';
+rowClass="impossible-row";
 
 }
 
-ladderHTML += `
-
-<div class="ladder-row">
-
-<b>${rule.grade}</b>
-
-(${rule.min}-${rule.max})
-
-<br>
-
-${status}
-
-</div>
-
+tableHTML += `
+<tr class="${rowClass}">
+<td>${row[0]}</td>
+<td>${row[1]}</td>
+<td>${row[2]}</td>
+<td>${row[3]}</td>
+<td>${row[4]}</td>
+<td>${row[5]}</td>
+</tr>
 `;
 
-}
+});
+
+tableHTML += "</table>";
 
 document.getElementById(
-"gradeLadder"
-).innerHTML = ladderHTML;
+"bundleTable"
+).innerHTML = tableHTML;
 
 let limits = [];
 

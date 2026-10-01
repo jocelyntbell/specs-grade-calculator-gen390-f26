@@ -1,3 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>GEN390 Fall 2026 Specifications Grading Calculator</title>
+
+<style>
+
+:root{
+    --green:#2e7d32;
+    --blue:#1565c0;
+    --red:#c62828;
+    --background:#f5f7fa;
+}
+
+body{
+    font-family: Arial, sans-serif;
+    margin:0;
+    padding:20px;
+    background:var(--background);
+    color:#222;
+}
+
+.container{
+    max-width:1100px;
+    margin:auto;
+}
+
+.card{
+    background:white;
+    border-radius:12px;
+    padding:20px;
+    margin-bottom:20px;
+    box-shadow:0 2px 8px rgba(0,0,0,.08);
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:15px;
+}
+
+input,
+select{
+    width:100%;
+    padding:10px;
+    font-size:16px;
+    box-sizing:border-box;
+}
+
+label{
+    font-weight:bold;
+}
+
+h1{
+    text-align:center;
+}
+
+.notice{
+    background:#fff8e1;
+    border-left:5px solid #f9a825;
+    padding:15px;
+    margin-bottom:25px;
+}
+
+.met{
+    color:var(--green);
+    font-weight:bold;
+}
+
+.possible{
+    color:var(--blue);
+    font-weight:bold;
+}
+
+.notpossible{
+    color:var(--red);
+    font-weight:bold;
+}
+
+.warning{
+    color:var(--red);
+    font-weight:bold;
+}
+
+.success{
+    color:var(--green);
+    font-weight:bold;
+}
+
+.ladder-row{
+    padding:10px 0;
+    border-bottom:1px solid #ddd;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Specifications Grading Calculator</h1>
+
+<div class="notice">
+<strong>Important:</strong>
+This calculator is intended as a reference tool.
+Official course grades are determined by the instructor in accordance with the course syllabus.
+</div>
+
+<div class="card">
+
+<h2>Course Status</h2>
+
+<div class="grid">
+
+<div>
+<label>Current Course Engagement Points</label>
+<input id="points" type="number" min="0" max="460" value="0">
+</div>
+
+<div>
+<label>Exit Tickets Graded (0-26)</label>
+<input id="exitTickets" type="number" min="0" max="26" value="0">
+</div>
+
+<div>
+<label>Reflections Graded (0-3)</label>
+<input id="reflections" type="number" min="0" max="3" value="0">
+</div>
+
+<div>
+<label>Check-In Reports Graded (0-4)</label>
+<input id="checkIns" type="number" min="0" max="4" value="0">
+</div>
+
+
+</div>
+
+</div>
+
+<div class="card">
+
+<h2>Civic Self Portrait Project</h2>
+
+<div class="grid">
+
+<div>
+<label>Civic Self Portrait</label>
+<select id="csp">
+<option>Not Graded Yet</option>
+<option>Excellent</option>
+<option>Proficient</option>
+<option>Developing</option>
+<option>Needs Improvement</option>
+</select>
+</div>
+
+</div>
+</div>
+
+<div class="card">
+
+<h2>Bryant Civic Engagement Project</h2>
+
+<div class="grid">
+
+<div>
+<label>Group Presentation</label>
+<select id="presentation">
+<option>Not Graded Yet</option>
+<option>Satisfactory</option>
+<option>Unsatisfactory</option>
+</select>
+</div>
+
+<div>
+<label>Group Report</label>
+<select id="report">
+<option>Not Graded Yet</option>
+<option>Excellent</option>
+<option>Proficient</option>
+<option>Developing</option>
+<option>Needs Improvement</option>
+</select>
+</div>
+
+<div>
+<label>Group Member Review Score</label>
+<select id="review">
+<option>Not Graded Yet</option>
+<option>Satisfactory</option>
+<option>Unsatisfactory</option>
+</select>
+</div>
+
+</div>
+
+</div>
+
+<div class="card">
+<h2>Highest Grade Still Possible & Remaining Opportunities</h2>
+<div id="highestPossible"></div>
+</div>
+
+<div class="card">
+<h2>Limiting Factors</h2>
+<div id="limitingFactors"></div>
+</div>
+
+<div class="card">
+<h2>Course Engagement Points Grade Ladder</h2>
+<div id="gradeLadder"></div>
+</div>
+
+</div>
 <script>
 
 const gradeRules = [
@@ -385,7 +603,7 @@ document.getElementById(
 limits.length === 0
 
 ? `<p class="success">
-No limiting factors currently prevent your highest possible grade.
+No limiting factors currently prevent your highest possible grade from being an A.
 </p>`
 
 : limits.map(
@@ -404,3 +622,5 @@ element.addEventListener("input", update)
 update();
 
 </script>
+</body>
+</html>
